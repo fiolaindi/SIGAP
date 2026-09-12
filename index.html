@@ -1,0 +1,1001 @@
+<!DOCTYPE html>
+<html lang="id">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>SIGAP — Sistem Peringatan Dini Putus Sekolah</title>
+<link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@700;900&display=swap" rel="stylesheet">
+<style>
+  *, *::before, *::after { box-sizing: border-box; margin: 0; padding: 0; }
+
+  :root {
+    --navy: #0D2137;
+    --blue: #1A5276;
+    --blue-mid: #1F618D;
+    --accent: #E67E22;
+    --accent-light: #F39C12;
+    --red: #C0392B;
+    --yellow: #F1C40F;
+    --green: #1E8449;
+    --white: #FFFFFF;
+    --off-white: #F7F9FC;
+    --text: #1C2B3A;
+    --muted: #5D7A8A;
+    --border: #D6E4EE;
+  }
+
+  html { scroll-behavior: smooth; }
+
+  body {
+    font-family: 'Inter', sans-serif;
+    color: var(--text);
+    background: var(--white);
+    line-height: 1.6;
+  }
+
+  /* NAV */
+  nav {
+    position: fixed; top: 0; left: 0; right: 0;
+    background: rgba(13, 33, 55, 0.95);
+    backdrop-filter: blur(10px);
+    z-index: 100;
+    padding: 0 2rem;
+    display: flex; align-items: center; justify-content: space-between;
+    height: 64px;
+  }
+
+  .nav-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--white);
+    letter-spacing: -0.5px;
+  }
+
+  .nav-logo span { color: var(--accent); }
+
+  .nav-links {
+    display: flex; gap: 2rem; list-style: none;
+  }
+
+  .nav-links a {
+    color: rgba(255,255,255,0.75);
+    text-decoration: none;
+    font-size: 0.875rem;
+    font-weight: 500;
+    transition: color 0.2s;
+  }
+
+  .nav-links a:hover { color: var(--white); }
+
+  /* HERO */
+  .hero {
+    min-height: 100vh;
+    background: var(--navy);
+    display: flex; align-items: center;
+    padding: 6rem 2rem 4rem;
+    position: relative;
+    overflow: hidden;
+  }
+
+  .hero::before {
+    content: '';
+    position: absolute; top: 0; right: 0;
+    width: 55%; height: 100%;
+    background: linear-gradient(135deg, var(--blue) 0%, var(--blue-mid) 100%);
+    clip-path: polygon(15% 0, 100% 0, 100% 100%, 0% 100%);
+    opacity: 0.4;
+  }
+
+  .hero-inner {
+    max-width: 1100px; margin: 0 auto; width: 100%;
+    display: grid; grid-template-columns: 1fr 1fr; gap: 4rem; align-items: center;
+    position: relative; z-index: 1;
+  }
+
+  .hero-tag {
+    display: inline-block;
+    background: rgba(230, 126, 34, 0.15);
+    border: 1px solid rgba(230, 126, 34, 0.4);
+    color: var(--accent-light);
+    font-size: 0.75rem;
+    font-weight: 600;
+    padding: 0.35rem 0.85rem;
+    border-radius: 2rem;
+    margin-bottom: 1.5rem;
+    text-transform: uppercase;
+    letter-spacing: 0.08em;
+  }
+
+  .hero h1 {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(2.5rem, 5vw, 4rem);
+    font-weight: 900;
+    color: var(--white);
+    line-height: 1.1;
+    margin-bottom: 1.5rem;
+  }
+
+  .hero h1 em {
+    font-style: normal;
+    color: var(--accent);
+  }
+
+  .hero p {
+    color: rgba(255,255,255,0.7);
+    font-size: 1rem;
+    max-width: 45ch;
+    margin-bottom: 2.5rem;
+    line-height: 1.75;
+  }
+
+  .hero-btns {
+    display: flex; gap: 1rem; flex-wrap: wrap;
+  }
+
+  .btn-primary {
+    background: var(--accent);
+    color: var(--white);
+    padding: 0.85rem 2rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 600;
+    font-size: 0.9rem;
+    transition: background 0.2s, transform 0.2s;
+    display: inline-block;
+  }
+
+  .btn-primary:hover {
+    background: var(--accent-light);
+    transform: translateY(-2px);
+  }
+
+  .btn-outline {
+    border: 1.5px solid rgba(255,255,255,0.3);
+    color: var(--white);
+    padding: 0.85rem 2rem;
+    border-radius: 0.5rem;
+    text-decoration: none;
+    font-weight: 500;
+    font-size: 0.9rem;
+    transition: border-color 0.2s, background 0.2s;
+    display: inline-block;
+  }
+
+  .btn-outline:hover {
+    border-color: var(--white);
+    background: rgba(255,255,255,0.08);
+  }
+
+  /* STAT CARDS in hero */
+  .hero-stats {
+    display: grid; grid-template-columns: 1fr 1fr; gap: 1rem;
+  }
+
+  .stat-card {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1rem;
+    padding: 1.5rem;
+  }
+
+  .stat-card .stat-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2.2rem;
+    font-weight: 900;
+    color: var(--accent);
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .stat-card .stat-label {
+    font-size: 0.8rem;
+    color: rgba(255,255,255,0.6);
+    line-height: 1.4;
+  }
+
+  .stat-card.highlight {
+    grid-column: 1 / -1;
+    background: rgba(230, 126, 34, 0.1);
+    border-color: rgba(230, 126, 34, 0.3);
+  }
+
+  /* SECTIONS */
+  section { padding: 5rem 2rem; }
+
+  .section-inner {
+    max-width: 1100px; margin: 0 auto;
+  }
+
+  .section-label {
+    font-size: 0.75rem;
+    font-weight: 600;
+    color: var(--accent);
+    text-transform: uppercase;
+    letter-spacing: 0.1em;
+    margin-bottom: 0.75rem;
+  }
+
+  .section-title {
+    font-family: 'Playfair Display', serif;
+    font-size: clamp(1.75rem, 3vw, 2.5rem);
+    font-weight: 700;
+    color: var(--navy);
+    line-height: 1.2;
+    margin-bottom: 1rem;
+    max-width: 30ch;
+  }
+
+  .section-desc {
+    color: var(--muted);
+    font-size: 1rem;
+    max-width: 55ch;
+    line-height: 1.75;
+    margin-bottom: 3rem;
+  }
+
+  /* MASALAH */
+  .masalah { background: var(--off-white); }
+
+  .masalah-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(240px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .masalah-card {
+    background: var(--white);
+    border-radius: 1rem;
+    padding: 2rem;
+    border-left: 4px solid var(--red);
+  }
+
+  .masalah-card .m-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 3rem;
+    font-weight: 900;
+    color: var(--red);
+    opacity: 0.15;
+    line-height: 1;
+    margin-bottom: 0.5rem;
+  }
+
+  .masalah-card h3 {
+    font-size: 1.1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .masalah-card p {
+    font-size: 0.875rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* CARA KERJA */
+  .cara-kerja { background: var(--white); }
+
+  .flow {
+    display: grid;
+    grid-template-columns: repeat(4, 1fr);
+    gap: 0;
+    position: relative;
+    margin-top: 1rem;
+  }
+
+  .flow::before {
+    content: '';
+    position: absolute;
+    top: 3rem; left: 12.5%; right: 12.5%;
+    height: 2px;
+    background: linear-gradient(to right, var(--blue), var(--accent));
+    z-index: 0;
+  }
+
+  .flow-step {
+    text-align: center;
+    padding: 0 1rem;
+    position: relative; z-index: 1;
+  }
+
+  .flow-icon {
+    width: 60px; height: 60px;
+    background: var(--navy);
+    border-radius: 50%;
+    display: flex; align-items: center; justify-content: center;
+    font-size: 1.5rem;
+    margin: 0 auto 1.5rem;
+    border: 3px solid var(--white);
+    box-shadow: 0 0 0 3px var(--blue);
+  }
+
+  .flow-step h3 {
+    font-size: 0.9rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .flow-step p {
+    font-size: 0.8rem;
+    color: var(--muted);
+    line-height: 1.5;
+  }
+
+  /* DASHBOARD */
+  .dashboard-section { background: var(--navy); }
+
+  .dashboard-section .section-title { color: var(--white); }
+  .dashboard-section .section-desc { color: rgba(255,255,255,0.6); }
+  .dashboard-section .section-label { color: var(--accent-light); }
+
+  .dashboard-preview {
+    background: rgba(255,255,255,0.05);
+    border: 1px solid rgba(255,255,255,0.1);
+    border-radius: 1.5rem;
+    padding: 2rem;
+    margin-top: 1rem;
+  }
+
+  .db-header {
+    background: var(--blue);
+    border-radius: 0.75rem;
+    padding: 1rem 1.5rem;
+    display: flex; align-items: center; justify-content: space-between;
+    margin-bottom: 1.5rem;
+  }
+
+  .db-header span {
+    color: var(--white);
+    font-weight: 700;
+    font-size: 1rem;
+  }
+
+  .db-header small {
+    color: rgba(255,255,255,0.6);
+    font-size: 0.8rem;
+  }
+
+  .zona-grid {
+    display: grid;
+    grid-template-columns: repeat(3, 1fr);
+    gap: 1rem;
+    margin-bottom: 1.5rem;
+  }
+
+  .zona {
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    text-align: center;
+  }
+
+  .zona.merah { background: rgba(192, 57, 43, 0.2); border: 1px solid rgba(192,57,43,0.4); }
+  .zona.kuning { background: rgba(241, 196, 15, 0.2); border: 1px solid rgba(241,196,15,0.4); }
+  .zona.hijau { background: rgba(30, 132, 73, 0.2); border: 1px solid rgba(30,132,73,0.4); }
+
+  .zona .z-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    display: block;
+    margin-bottom: 0.25rem;
+  }
+
+  .zona.merah .z-num { color: #E74C3C; }
+  .zona.kuning .z-num { color: #F1C40F; }
+  .zona.hijau .z-num { color: #2ECC71; }
+
+  .zona .z-label {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.7);
+  }
+
+  .siswa-list { display: flex; flex-direction: column; gap: 0.75rem; }
+
+  .siswa-row {
+    background: rgba(255,255,255,0.05);
+    border-radius: 0.5rem;
+    padding: 0.875rem 1.25rem;
+    display: flex; align-items: center; justify-content: space-between;
+  }
+
+  .siswa-info { display: flex; align-items: center; gap: 0.75rem; }
+
+  .siswa-avatar {
+    width: 36px; height: 36px;
+    border-radius: 50%;
+    background: var(--blue-mid);
+    display: flex; align-items: center; justify-content: center;
+    font-size: 0.8rem;
+    color: var(--white);
+    font-weight: 600;
+  }
+
+  .siswa-name {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--white);
+  }
+
+  .siswa-kelas {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.5);
+  }
+
+  .risiko-badge {
+    font-size: 0.75rem;
+    font-weight: 700;
+    padding: 0.3rem 0.75rem;
+    border-radius: 2rem;
+  }
+
+  .risiko-badge.tinggi { background: rgba(192,57,43,0.3); color: #E74C3C; }
+  .risiko-badge.sedang { background: rgba(241,196,15,0.3); color: #F1C40F; }
+  .risiko-badge.rendah { background: rgba(30,132,73,0.3); color: #2ECC71; }
+
+  /* PREDIKSI ARIMA */
+  .arima-section { background: var(--off-white); }
+
+  .arima-grid {
+    display: grid;
+    grid-template-columns: 1fr 1fr;
+    gap: 3rem;
+    align-items: center;
+  }
+
+  .arima-chart {
+    background: var(--white);
+    border-radius: 1rem;
+    padding: 1.5rem;
+    box-shadow: 0 4px 24px rgba(0,0,0,0.06);
+  }
+
+  .chart-title {
+    font-size: 0.875rem;
+    font-weight: 600;
+    color: var(--navy);
+    margin-bottom: 1.5rem;
+  }
+
+  .bars {
+    display: flex;
+    align-items: flex-end;
+    gap: 0.5rem;
+    height: 160px;
+  }
+
+  .bar-group {
+    flex: 1;
+    display: flex;
+    flex-direction: column;
+    align-items: center;
+    gap: 0.25rem;
+    height: 100%;
+    justify-content: flex-end;
+  }
+
+  .bar {
+    width: 100%;
+    border-radius: 4px 4px 0 0;
+    transition: opacity 0.2s;
+  }
+
+  .bar.actual { background: var(--blue); }
+  .bar.forecast { background: var(--accent); opacity: 0.8; }
+
+  .bar-label {
+    font-size: 0.6rem;
+    color: var(--muted);
+    text-align: center;
+  }
+
+  .chart-legend {
+    display: flex; gap: 1rem; margin-top: 1rem;
+  }
+
+  .legend-item {
+    display: flex; align-items: center; gap: 0.4rem;
+    font-size: 0.75rem; color: var(--muted);
+  }
+
+  .legend-dot {
+    width: 10px; height: 10px; border-radius: 2px;
+  }
+
+  .arima-info h3 {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 1rem;
+  }
+
+  .arima-result {
+    background: var(--white);
+    border-radius: 0.75rem;
+    padding: 1.25rem;
+    margin-bottom: 1rem;
+    border-left: 3px solid var(--blue);
+  }
+
+  .arima-result h4 {
+    font-size: 0.8rem;
+    font-weight: 600;
+    color: var(--muted);
+    text-transform: uppercase;
+    letter-spacing: 0.05em;
+    margin-bottom: 0.25rem;
+  }
+
+  .arima-result p {
+    font-size: 0.95rem;
+    font-weight: 600;
+    color: var(--navy);
+  }
+
+  /* DAMPAK */
+  .dampak-section { background: var(--white); }
+
+  .dampak-grid {
+    display: grid;
+    grid-template-columns: repeat(auto-fit, minmax(220px, 1fr));
+    gap: 1.5rem;
+  }
+
+  .dampak-card {
+    background: var(--off-white);
+    border-radius: 1rem;
+    padding: 1.75rem;
+    text-align: center;
+  }
+
+  .dampak-icon {
+    font-size: 2rem;
+    margin-bottom: 1rem;
+    display: block;
+  }
+
+  .dampak-card h3 {
+    font-size: 1rem;
+    font-weight: 700;
+    color: var(--navy);
+    margin-bottom: 0.5rem;
+  }
+
+  .dampak-card p {
+    font-size: 0.85rem;
+    color: var(--muted);
+    line-height: 1.6;
+  }
+
+  /* SDGs */
+  .sdgs-section {
+    background: linear-gradient(135deg, var(--navy) 0%, var(--blue-mid) 100%);
+  }
+
+  .sdgs-section .section-title { color: var(--white); }
+  .sdgs-section .section-desc { color: rgba(255,255,255,0.65); }
+  .sdgs-section .section-label { color: var(--accent-light); }
+
+  .sdgs-chips {
+    display: flex; flex-wrap: wrap; gap: 1rem;
+  }
+
+  .sdgs-chip {
+    background: rgba(255,255,255,0.1);
+    border: 1px solid rgba(255,255,255,0.2);
+    border-radius: 0.75rem;
+    padding: 1rem 1.5rem;
+    display: flex; align-items: center; gap: 0.75rem;
+  }
+
+  .sdgs-chip .chip-num {
+    font-family: 'Playfair Display', serif;
+    font-size: 1.5rem;
+    font-weight: 900;
+    color: var(--accent);
+  }
+
+  .sdgs-chip .chip-text h4 {
+    font-size: 0.875rem;
+    font-weight: 700;
+    color: var(--white);
+  }
+
+  .sdgs-chip .chip-text p {
+    font-size: 0.75rem;
+    color: rgba(255,255,255,0.55);
+  }
+
+  /* FOOTER */
+  footer {
+    background: var(--navy);
+    border-top: 1px solid rgba(255,255,255,0.08);
+    padding: 3rem 2rem;
+    text-align: center;
+  }
+
+  footer .f-logo {
+    font-family: 'Playfair Display', serif;
+    font-size: 2rem;
+    font-weight: 900;
+    color: var(--white);
+    margin-bottom: 0.5rem;
+  }
+
+  footer .f-logo span { color: var(--accent); }
+
+  footer p {
+    color: rgba(255,255,255,0.45);
+    font-size: 0.85rem;
+    margin-bottom: 0.25rem;
+  }
+
+  footer .f-name {
+    color: rgba(255,255,255,0.7);
+    font-size: 0.9rem;
+    font-weight: 500;
+    margin-top: 1rem;
+  }
+
+  /* RESPONSIVE */
+  @media (max-width: 768px) {
+    .hero-inner { grid-template-columns: 1fr; gap: 3rem; }
+    .flow { grid-template-columns: 1fr 1fr; }
+    .flow::before { display: none; }
+    .arima-grid { grid-template-columns: 1fr; }
+    .zona-grid { grid-template-columns: 1fr; }
+    .nav-links { display: none; }
+  }
+</style>
+</head>
+<body>
+
+<!-- NAV -->
+<nav>
+  <div class="nav-logo">SI<span>GAP</span></div>
+  <ul class="nav-links">
+    <li><a href="#masalah">Masalah</a></li>
+    <li><a href="#cara-kerja">Cara Kerja</a></li>
+    <li><a href="#dashboard">Dashboard</a></li>
+    <li><a href="#prediksi">Prediksi</a></li>
+    <li><a href="#dampak">Dampak</a></li>
+  </ul>
+</nav>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-inner">
+    <div class="hero-content">
+      <div class="hero-tag">SDGs Action Plan — SDG 4: Quality Education</div>
+      <h1>Deteksi <em>sebelum</em> terlambat.</h1>
+      <p>SIGAP adalah sistem peringatan dini berbasis metode ARIMA yang mengidentifikasi siswa berisiko putus sekolah — sebelum mereka benar-benar berhenti.</p>
+      <div class="hero-btns">
+        <a href="#dashboard" class="btn-primary">Lihat Dashboard</a>
+        <a href="#cara-kerja" class="btn-outline">Cara Kerja</a>
+      </div>
+    </div>
+    <div class="hero-stats">
+      <div class="stat-card highlight">
+        <div class="stat-num">57.026</div>
+        <div class="stat-label">anak di Jawa Timur putus sekolah — peringkat 3 nasional</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">3 mnt</div>
+        <div class="stat-label">frekuensi 1 anak Indonesia berhenti sekolah</div>
+      </div>
+      <div class="stat-card">
+        <div class="stat-num">0,28%</div>
+        <div class="stat-label">angka putus sekolah SMK naik dari 0,23% (BPS 2024)</div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- MASALAH -->
+<section class="masalah" id="masalah">
+  <div class="section-inner">
+    <div class="section-label">Mengapa ini mendesak?</div>
+    <h2 class="section-title">Sistem kita baru bertindak setelah terlambat.</h2>
+    <p class="section-desc">Tanda-tanda siswa berisiko selalu ada — penurunan kehadiran, nilai yang merosot, partisipasi yang memudar. Namun tanpa instrumen deteksi, semuanya diabaikan sampai siswa benar-benar pergi.</p>
+    <div class="masalah-grid">
+      <div class="masalah-card">
+        <div class="m-num">01</div>
+        <h3>Sistem Reaktif</h3>
+        <p>Intervensi baru dilakukan setelah siswa resmi berhenti sekolah — bukan sebelum keputusan itu diambil.</p>
+      </div>
+      <div class="masalah-card">
+        <div class="m-num">02</div>
+        <h3>Data Tidak Termanfaatkan</h3>
+        <p>Data kehadiran, nilai, dan perilaku siswa tersedia tapi tidak dianalisis untuk prediksi risiko.</p>
+      </div>
+      <div class="masalah-card">
+        <div class="m-num">03</div>
+        <h3>Kesenjangan Wilayah</h3>
+        <p>Kabupaten Sampang, Bangkalan, Situbondo mencatat angka putus sekolah jauh di atas rata-rata Jawa Timur.</p>
+      </div>
+      <div class="masalah-card">
+        <div class="m-num">04</div>
+        <h3>Faktor Ekonomi Dominan</h3>
+        <p>58% kasus putus sekolah disebabkan kesulitan ekonomi — yang sebenarnya dapat diprediksi lewat variabel sosio-ekonomi siswa.</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- CARA KERJA -->
+<section class="cara-kerja" id="cara-kerja">
+  <div class="section-inner">
+    <div class="section-label">Mekanisme SIGAP</div>
+    <h2 class="section-title">Dari data mentah ke tindakan nyata.</h2>
+    <p class="section-desc">SIGAP mengubah data administratif sekolah yang selama ini tidak termanfaatkan menjadi sinyal peringatan dini yang dapat ditindaklanjuti.</p>
+    <div class="flow">
+      <div class="flow-step">
+        <div class="flow-icon">📥</div>
+        <h3>Kumpulkan Data</h3>
+        <p>Kehadiran bulanan, nilai akademik, partisipasi belajar, dan latar belakang sosio-ekonomi</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">📈</div>
+        <h3>Analisis ARIMA</h3>
+        <p>Model ARIMA(1,1,0) membaca pola deret waktu dan mendeteksi tren penurunan per siswa</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">🎯</div>
+        <h3>Indeks Risiko</h3>
+        <p>Setiap siswa mendapat skor risiko yang ditampilkan dalam tiga zona: hijau, kuning, merah</p>
+      </div>
+      <div class="flow-step">
+        <div class="flow-icon">🚨</div>
+        <h3>Intervensi Tepat</h3>
+        <p>Guru dan orang tua menerima notifikasi beserta rekomendasi tindakan spesifik</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DASHBOARD -->
+<section class="dashboard-section" id="dashboard">
+  <div class="section-inner">
+    <div class="section-label">Tampilan Sistem</div>
+    <h2 class="section-title">Dashboard yang guru bisa pakai hari ini.</h2>
+    <p class="section-desc">Tidak perlu keahlian data. Cukup buka dashboard — SIGAP langsung memberi tahu siapa yang butuh perhatian.</p>
+    <div class="dashboard-preview">
+      <div class="db-header">
+        <span>SIGAP Dashboard</span>
+        <small>SMA Percontohan Jawa Timur · September 2026</small>
+      </div>
+      <div class="zona-grid">
+        <div class="zona merah">
+          <span class="z-num">9</span>
+          <div class="z-label">🔴 Zona Merah<br>Intervensi Segera</div>
+        </div>
+        <div class="zona kuning">
+          <span class="z-num">15</span>
+          <div class="z-label">🟡 Zona Kuning<br>Perlu Perhatian</div>
+        </div>
+        <div class="zona hijau">
+          <span class="z-num">276</span>
+          <div class="z-label">🟢 Zona Hijau<br>Kondisi Stabil</div>
+        </div>
+      </div>
+      <div class="siswa-list">
+        <div class="siswa-row">
+          <div class="siswa-info">
+            <div class="siswa-avatar">AF</div>
+            <div>
+              <div class="siswa-name">Ahmad Fauzi</div>
+              <div class="siswa-kelas">Kelas X-A · Kehadiran 65%</div>
+            </div>
+          </div>
+          <span class="risiko-badge tinggi">Risiko 87%</span>
+        </div>
+        <div class="siswa-row">
+          <div class="siswa-info">
+            <div class="siswa-avatar">SR</div>
+            <div>
+              <div class="siswa-name">Siti Rahayu</div>
+              <div class="siswa-kelas">Kelas X-B · Kehadiran 72%</div>
+            </div>
+          </div>
+          <span class="risiko-badge tinggi">Risiko 79%</span>
+        </div>
+        <div class="siswa-row">
+          <div class="siswa-info">
+            <div class="siswa-avatar">BS</div>
+            <div>
+              <div class="siswa-name">Budi Santoso</div>
+              <div class="siswa-kelas">Kelas XI-A · Kehadiran 78%</div>
+            </div>
+          </div>
+          <span class="risiko-badge sedang">Risiko 52%</span>
+        </div>
+        <div class="siswa-row">
+          <div class="siswa-info">
+            <div class="siswa-avatar">RW</div>
+            <div>
+              <div class="siswa-name">Rina Wulandari</div>
+              <div class="siswa-kelas">Kelas XII-B · Kehadiran 91%</div>
+            </div>
+          </div>
+          <span class="risiko-badge rendah">Risiko 12%</span>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- PREDIKSI ARIMA -->
+<section class="arima-section" id="prediksi">
+  <div class="section-inner">
+    <div class="section-label">Model Prediktif</div>
+    <h2 class="section-title">ARIMA membaca tren yang tidak terlihat mata.</h2>
+    <p class="section-desc">Metode ARIMA (Autoregressive Integrated Moving Average) digunakan untuk menganalisis pola deret waktu data siswa dan memproyeksikan risiko 12 bulan ke depan.</p>
+    <div class="arima-grid">
+      <div class="arima-chart">
+        <div class="chart-title">Prediksi Jumlah Siswa Berisiko Putus Sekolah (2024–2025)</div>
+        <div class="bars">
+          <div class="bar-group">
+            <div class="bar actual" style="height:70%"></div>
+            <div class="bar-label">Jul</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar actual" style="height:74%"></div>
+            <div class="bar-label">Agt</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar actual" style="height:77%"></div>
+            <div class="bar-label">Sep</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar actual" style="height:80%"></div>
+            <div class="bar-label">Okt</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar actual" style="height:83%"></div>
+            <div class="bar-label">Nov</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar actual" style="height:87%"></div>
+            <div class="bar-label">Des</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar forecast" style="height:90%"></div>
+            <div class="bar-label">Jan</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar forecast" style="height:93%"></div>
+            <div class="bar-label">Feb</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar forecast" style="height:95%"></div>
+            <div class="bar-label">Mar</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar forecast" style="height:97%"></div>
+            <div class="bar-label">Apr</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar forecast" style="height:99%"></div>
+            <div class="bar-label">Mei</div>
+          </div>
+          <div class="bar-group">
+            <div class="bar forecast" style="height:100%"></div>
+            <div class="bar-label">Jun</div>
+          </div>
+        </div>
+        <div class="chart-legend">
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--blue)"></div>
+            Data aktual 2024
+          </div>
+          <div class="legend-item">
+            <div class="legend-dot" style="background:var(--accent)"></div>
+            Proyeksi ARIMA 2025
+          </div>
+        </div>
+      </div>
+      <div class="arima-info">
+        <h3>Hasil Model ARIMA(1,1,0)</h3>
+        <div class="arima-result">
+          <h4>Model Terpilih</h4>
+          <p>ARIMA(1,1,0) — AR signifikan (p=0,000)</p>
+        </div>
+        <div class="arima-result">
+          <h4>Prediksi Desember 2025</h4>
+          <p>11,5 siswa berisiko per bulan — naik dari 9 di awal tahun</p>
+        </div>
+        <div class="arima-result">
+          <h4>Interpretasi</h4>
+          <p>Tanpa intervensi, tren risiko terus meningkat. SIGAP hadir untuk membalik tren ini.</p>
+        </div>
+        <div class="arima-result" style="border-left-color: var(--accent)">
+          <h4>Ljung-Box Test</h4>
+          <p>p-value > 0,05 — residual white noise ✅ Model layak digunakan</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- DAMPAK -->
+<section class="dampak-section" id="dampak">
+  <div class="section-inner">
+    <div class="section-label">Yang berubah</div>
+    <h2 class="section-title">Dampak yang terukur, bukan sekadar janji.</h2>
+    <p class="section-desc">Target SIGAP dalam tiga tahun pertama implementasi di Jawa Timur.</p>
+    <div class="dampak-grid">
+      <div class="dampak-card">
+        <span class="dampak-icon">📉</span>
+        <h3>20–30% Penurunan</h3>
+        <p>Target penurunan angka putus sekolah di Jawa Timur dalam 3 tahun implementasi</p>
+      </div>
+      <div class="dampak-card">
+        <span class="dampak-icon">🏫</span>
+        <h3>10 Sekolah Pilot</h3>
+        <p>Dimulai dari 10 sekolah percontohan di Surabaya, Malang, dan Sidoarjo</p>
+      </div>
+      <div class="dampak-card">
+        <span class="dampak-icon">👨‍🏫</span>
+        <h3>Guru Lebih Proaktif</h3>
+        <p>Data menggantikan intuisi — guru bertindak berdasarkan bukti, bukan perasaan</p>
+      </div>
+      <div class="dampak-card">
+        <span class="dampak-icon">🗂️</span>
+        <h3>Integrasi Dapodik</h3>
+        <p>Tahun ketiga: integrasi penuh dengan sistem Dapodik nasional untuk skala lebih luas</p>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- SDGs -->
+<section class="sdgs-section">
+  <div class="section-inner">
+    <div class="section-label">Kontribusi global</div>
+    <h2 class="section-title">SIGAP untuk tujuan yang lebih besar.</h2>
+    <p class="section-desc">Program ini dirancang selaras dengan empat tujuan pembangunan berkelanjutan yang saling terhubung.</p>
+    <div class="sdgs-chips">
+      <div class="sdgs-chip">
+        <div class="chip-num">04</div>
+        <div class="chip-text">
+          <h4>Quality Education</h4>
+          <p>Pendidikan inklusif & berkeadilan untuk semua</p>
+        </div>
+      </div>
+      <div class="sdgs-chip">
+        <div class="chip-num">09</div>
+        <div class="chip-text">
+          <h4>Industry & Innovation</h4>
+          <p>Teknologi prediktif untuk infrastruktur pendidikan</p>
+        </div>
+      </div>
+      <div class="sdgs-chip">
+        <div class="chip-num">10</div>
+        <div class="chip-text">
+          <h4>Reduced Inequalities</h4>
+          <p>Menutup kesenjangan akses pendidikan antarwilayah</p>
+        </div>
+      </div>
+      <div class="sdgs-chip">
+        <div class="chip-num">17</div>
+        <div class="chip-text">
+          <h4>Partnerships for Goals</h4>
+          <p>Kolaborasi sekolah, pemerintah, dan perguruan tinggi</p>
+        </div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- FOOTER -->
+<footer>
+  <div class="f-logo">SI<span>GAP</span></div>
+  <p>Sistem Peringatan Dini Risiko Putus Sekolah Berbasis Metode ARIMA</p>
+  <p>Upaya Mewujudkan Pendidikan Berkualitas dan Berkelanjutan di Jawa Timur</p>
+  <p class="f-name">Fiola Indi Azzahra · Statistika · Universitas Airlangga · 2026</p>
+</footer>
+
+</body>
+</html>
